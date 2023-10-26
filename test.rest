@@ -1,0 +1,12 @@
+GET http://localhost:8080/api/users
+
+###
+
+POST http://localhost:8080/api/register
+Content-Type: "application/json"
+
+{
+    "name": "John Doe",
+    "email": "JhonDoe@gmail.com",
+    "password": "123456"
+}
