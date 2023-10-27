@@ -8,6 +8,22 @@ const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
 
-const Data = require('../schema/dataSchema');
+const data = require('../schema/dataSchema');
 
+
+//get all data
+
+router.get('/data', async (req, res) => {
+    try {
+        const allData = await data.find();
+        res.json(allData);
+        console.log('All data get successfully');
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+
+
+
+module.exports = router;
 

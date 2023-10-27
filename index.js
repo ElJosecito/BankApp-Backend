@@ -31,8 +31,23 @@ app.use(function(req, res, next){
 app.use(express.json());
 
 //routes
+
+//user routes
 const userRoutes = require('./src/routes/userRoutes');
 app.use('/api/', userRoutes);
+
+//data routes
+const dataRoutes = require('./src/routes/dataRoute');
+app.use('/api/', dataRoutes);
+
+//card routes
+const cardRoutes = require('./src/routes/cardRoutes');
+app.use('/api/', cardRoutes);
+
+//account routes
+const accountRoutes = require('./src/routes/accountRoutes');
+app.use('/api/', accountRoutes);
+
 
 //port and connection
 const port = config.appConfig.port;

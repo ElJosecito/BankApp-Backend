@@ -12,10 +12,10 @@ const dataSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: card,
     },
-    favorite: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: user,
-    },
+    // favorite: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: user,
+    // },
 })
 
 
