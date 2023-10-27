@@ -34,43 +34,42 @@ router.get('/card/:id', async (req, res) => {
     }
 });
 
-//create card
-router.post('/generate/card', async (req, res) => {
-    try {
-        let randomNumber, number, cvv, existingCard;
+//create card, commented because it is not necessary to create a card
+// router.post('/generate/card', async (req, res) => {
+//     try {
+//         let randomNumber, number, cvv, existingCard;
 
-        do {
-            // Generar un número aleatorio de 14 dígitos para el número de tarjeta
-            randomNumber = Math.floor(10000000000000 + Math.random() * 90000000000000);
-            number = randomNumber.toString();
+//         do {
+//             // Generar un número aleatorio de 14 dígitos para el número de tarjeta
+//             randomNumber = Math.floor(10000000000000 + Math.random() * 90000000000000);
+//             number = randomNumber.toString();
 
-            // Generar un CVV aleatorio de 3 dígitos
-            cvv = Math.floor(100 + Math.random() * 900).toString();
+//             // Generar un CVV aleatorio de 3 dígitos
+//             cvv = Math.floor(100 + Math.random() * 900).toString();
 
-            // Verificar si el número de tarjeta y CVV ya existen en la base de datos
-            existingCard = await card.findOne({ number, cvv });
+//             // Verificar si el número de tarjeta y CVV ya existen en la base de datos
+//             existingCard = await card.findOne({ number, cvv });
 
-        } while (existingCard);
+//         } while (existingCard);
 
-        // Generar una fecha de vencimiento aleatoria (MM/YY)
-        const expirationMonth = Math.floor(1 + Math.random() * 12);
-        const expirationYear = new Date().getFullYear() + Math.floor(Math.random() * 10);
+//         // Generar una fecha de vencimiento aleatoria (MM/YY)
+//         const expirationMonth = Math.floor(1 + Math.random() * 12);
+//         const expirationYear = new Date().getFullYear() + Math.floor(Math.random() * 10);
 
-        const expiration = `${expirationMonth.toString().padStart(2, '0')}/${expirationYear.toString().slice(-2)}`;
+//         const expiration = `${expirationMonth.toString().padStart(2, '0')}/${expirationYear.toString().slice(-2)}`;
 
-        const newCard = new card({number, expiration, cvv });
+//         const newCard = new card({number, expiration, cvv });
 
-        await newCard.save();
+//         await newCard.save();
 
-        res.json({ message: 'Card created successfully' });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ message: 'Error en el servidor' });
-    }
-});
+//         res.json({ message: 'Card created successfully' });
+//     } catch (e) {
+//         console.error(e);
+//         res.status(500).json({ message: 'Error en el servidor' });
+//     }
+// });
 
 //delete card by id
-
 router.delete('/card/:id', async (req, res) => {
     try {
         const { id } = req.params;
