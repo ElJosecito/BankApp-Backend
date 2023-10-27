@@ -112,12 +112,10 @@ const createCard = async (number, res, name) => {
 
         await newCard.save();
 
-        res.json({ message: 'Card created successfully' });
-
         return newCard._id;
     } catch (e) {
         console.error(e);
-        res.status(500).json({ message: 'Error en el servidor' });
+        throw e;
     }
 }
 
