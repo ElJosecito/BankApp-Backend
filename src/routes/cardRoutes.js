@@ -84,8 +84,5 @@ router.delete('/card/:id', async (req, res) => {
 });
 
 
-// Hacer cuentas para asociar el balance de la tarjeta con el balance de la cuenta
-
-
 
 module.exports = router;

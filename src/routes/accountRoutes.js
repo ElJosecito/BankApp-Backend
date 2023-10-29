@@ -4,10 +4,63 @@ const router = express.Router();
 
 const account = require('../schema/accountSchema');
 
+const jwt = require('jsonwebtoken');
+
 const card = require('../schema/cardSchema');
 
-//get all accounts
 
+//validate token
+const ValidateToken = (req, res, next) => {
+    const token = req.header("auth-token");
+  
+    if (!token) {
+      return res.status(401).json({ message: "Acceso denegado" });
+    }
+  
+    try {
+      const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      req.user = payload.user;
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error en el servidor" });
+    }
+  };
+
+
+//create card function
+const createCard = async (number, res, name) => {
+    try {
+        let cvv, existingCard;
+
+        do {
+            // Generar un CVV aleatorio de 3 dígitos
+            cvv = Math.floor(100 + Math.random() * 900).toString();
+
+            // Verificar si el número de tarjeta y CVV ya existen en la base de datos
+            existingCard = await card.findOne({ number, cvv });
+
+        } while (existingCard);
+
+        // Generar una fecha de vencimiento aleatoria (MM/YY)
+        const expirationMonth = Math.floor(1 + Math.random() * 12);
+        const expirationYear = new Date().getFullYear() + Math.floor(Math.random() * 10);
+
+        const expiration = `${expirationMonth.toString().padStart(2, '0')}/${expirationYear.toString().slice(-2)}`;
+
+        const newCard = new card({number, expiration, cvv, name });
+
+        await newCard.save();
+
+        return newCard._id;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
+
+
+//get all accounts
 router.get('/accounts', async (req, res) => {
     try {
         const allAccounts = await account.find();
@@ -20,7 +73,7 @@ router.get('/accounts', async (req, res) => {
 
 
 //get account by id
-router.get('/account/:id', async (req, res) => {
+router.get('/account/:id', ValidateToken, async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -34,7 +87,7 @@ router.get('/account/:id', async (req, res) => {
 });
 
 //create account
-router.post('/generate/account', async (req, res) => {
+router.post('/generate/account',ValidateToken, async (req, res) => {
     try {
 
         const { name } = req.body;
@@ -69,7 +122,7 @@ router.post('/generate/account', async (req, res) => {
 
 
 //add card to account
-router.put('/account/:id/card', async (req, res) => {
+router.put('/account/:id/card',ValidateToken, async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -87,37 +140,6 @@ router.put('/account/:id/card', async (req, res) => {
 });
 
 
-//create card function
-
-const createCard = async (number, res, name) => {
-    try {
-        let cvv, existingCard;
-
-        do {
-            // Generar un CVV aleatorio de 3 dígitos
-            cvv = Math.floor(100 + Math.random() * 900).toString();
-
-            // Verificar si el número de tarjeta y CVV ya existen en la base de datos
-            existingCard = await card.findOne({ number, cvv });
-
-        } while (existingCard);
-
-        // Generar una fecha de vencimiento aleatoria (MM/YY)
-        const expirationMonth = Math.floor(1 + Math.random() * 12);
-        const expirationYear = new Date().getFullYear() + Math.floor(Math.random() * 10);
-
-        const expiration = `${expirationMonth.toString().padStart(2, '0')}/${expirationYear.toString().slice(-2)}`;
-
-        const newCard = new card({number, expiration, cvv, name });
-
-        await newCard.save();
-
-        return newCard._id;
-    } catch (e) {
-        console.error(e);
-        throw e;
-    }
-}
 
 
 module.exports = router;

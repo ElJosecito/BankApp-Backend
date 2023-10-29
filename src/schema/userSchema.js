@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const data = require("./dataSchema");
+const account = require("./accountSchema");
 
 const userSchema = new mongoose.Schema(
   {
@@ -8,14 +8,11 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     admin: {default: false, type: Boolean},
-    data : 
+    account : 
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: data,
+        ref: account,
       },
-    
-
-
   },
   {
     timestamps: true,
