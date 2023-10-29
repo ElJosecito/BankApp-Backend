@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const account = require("./accountSchema");
+const card = require("./cardSchema");
+
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
