@@ -162,7 +162,7 @@ const createAccount = async (name, res) => {
 };
 
 //get user with account and card
-router.get("/user/:id/account", ValidateToken , async (req, res) => {
+router.get("/user/account/:id", ValidateToken, async (req, res) => {
   try {
     const { id } = req.params;
 
