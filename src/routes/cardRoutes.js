@@ -34,31 +34,62 @@ router.get("/card/:id", async (req, res) => {
 });
 
 //Retirar dinero de la cuenta
-
 router.put("/card/retiro", async (req, res) => {
-    try {
-        const {number, cvv, amount} = req.body;
+  try {
+    const { number, cvv, amount } = req.body;
 
-        const cardId = await card.findOne({number, cvv});
+    const cardId = await card.findOne({ number, cvv });
 
-        if(!cardId) {
-            return res.status(400).json({message: 'Tarjeta no encontrada'});
-        }
-        //find account by card number and update balance
-
-        const accountId = await account.findOneAndUpdate({card: cardId._id}, {$inc: {balance: -amount}});
-
-        if(!accountId) {
-            return res.status(400).json({message: 'Cuenta no encontrada'});
-        }
-
-        res.json({message: 'Retiro realizado con éxito'});
-  
-    } catch (e) {
-      console.error(e);
-      res.status(500).json({ message: "Error en el servidor" });
+    if (!cardId) {
+      return res.status(400).json({ message: "Tarjeta no encontrada" });
     }
-  });
+    //find account by card number and update balance
+
+    const accountId = await account.findOneAndUpdate(
+      { card: cardId._id },
+      { $inc: { balance: -amount } }
+    );
+
+    if (!accountId) {
+      return res.status(400).json({ message: "Cuenta no encontrada" });
+    }
+
+    res.json({ message: "Retiro realizado con éxito" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Error en el servidor" });
+  }
+});
+
+//add money to account
+router.put("/card/add", async (req, res) => {
+  try {
+    const { number, cvv, amount } = req.body;
+
+    const cardId = await card.findOne({ number, cvv });
+
+    if (!cardId) {
+      return res.status(400).json({ message: "Tarjeta no encontrada" });
+    }
+
+    //find account by card number and update balance
+
+    const accountId = await account.findOneAndUpdate(
+      { card: cardId._id },
+      { $inc: { balance: amount } }
+    );
+
+    if (!accountId) {
+      return res.status(400).json({ message: "Cuenta no encontrada" });
+    }
+
+    res.json({ message: "Depósito realizado con éxito" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Error en el servidor" });
+  }
+});
+
 //delete card by id
 router.delete("/card/:id", async (req, res) => {
   try {
